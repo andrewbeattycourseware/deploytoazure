@@ -8,7 +8,7 @@ app = Flask(__name__, static_url_path='', static_folder='.')
 
 @app.route('/')
 def index():
-    return "Hello, World! this is changed this is specially for python anywhere"
+    return 'About to test the static pages <a href="testhtml.html>here</a>'
 
 @app.route('/book/<int:id>')
 def getBook(id):
