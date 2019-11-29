@@ -15,7 +15,7 @@ def getBook(id):
     return "you want book with "+ str(id)
 
 @app.route('/book/<int:id>', methods=['DELETE'])
-def getBook(id):
+def deleteBook(id):
     return "in delete with id "+ str(id)
 
 
