@@ -14,5 +14,10 @@ def index():
 def getBook(id):
     return "you want book with "+ str(id)
 
+@app.route('/book/<int:id>', methods=['DELETE'])
+def getBook(id):
+    return "in delete with id "+ str(id)
+
+
 if __name__ == '__main__' :
     app.run(debug= True)
