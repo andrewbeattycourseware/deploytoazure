@@ -5,10 +5,9 @@
 </head>
 <body> this is just a test</body>
 <script>
-    
-//host= window.location.origin
+host= window.location.origin
      $.ajax({
-            "url"   :"http://127.0.0.1:5000/book/2",
+            "url": host+"/book/1",
             "method": "GET",
             "data": "",
             "dataType": "HTML",
@@ -19,6 +18,6 @@
                 console.log("error: " + status + " msg:" + error);
             }
         });
-//console.log(host)
+console.log(host)
 </script>
 </html>
