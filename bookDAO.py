@@ -14,7 +14,7 @@ class BookDAO:
      
     
     def getCursor(self):
-        if NOT self.db.is_connected():
+        if not self.db.is_connected():
             connectToDB()
         return self.db.cursor()
     
