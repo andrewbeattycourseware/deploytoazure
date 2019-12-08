@@ -10,7 +10,7 @@ class BookDAO:
             database=   cfg.mysql['database']
         )
     def __init__(self): 
-        connectToDB()
+        self.connectToDB()
      
     
     def getCursor(self):
