@@ -20,7 +20,7 @@ class BookDAO:
     
             
     def create(self, values):
-        cursor = getCursor()
+        cursor = self.getCursor()
         sql="insert into book (title,author, price) values (%s,%s,%s)"
         cursor.execute(sql, values)
 
@@ -30,7 +30,7 @@ class BookDAO:
         return lastRowId
 
     def getAll(self):
-        cursor = getCursor()
+        cursor = self.getCursor()
         sql="select * from book"
         cursor.execute(sql)
         results = cursor.fetchall()
@@ -43,7 +43,7 @@ class BookDAO:
         return returnArray
 
     def findByID(self, id):
-        cursor = getCursor()
+        cursor = self.getCursor()
         sql="select * from book where id = %s"
         values = (id,)
 
@@ -54,7 +54,7 @@ class BookDAO:
         return book
 
     def update(self, values):
-        cursor = getCursor()
+        cursor = self.getCursor()
         sql="update book set title= %s,author=%s, price=%s  where id = %s"
         cursor.execute(sql, values)
         self.db.commit()
