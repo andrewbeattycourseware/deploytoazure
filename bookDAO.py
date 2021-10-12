@@ -1,15 +1,17 @@
 import mysql.connector
 from mysql.connector import cursor
 
-class BookDao:
-    db = ""
-    def __init__(self):
+import dbconfig as cfg
+class BookDAO:
+    db=""
+    def connectToDB(self):
         self.db = mysql.connector.connect(
-            host = 'localhost',
-            user= 'root',
-            password = '',
-            database ='pforcs'
+            host=       cfg.mysql['host'],
+            user=       cfg.mysql['user'],
+            password=   cfg.mysql['password'],
+            database=   cfg.mysql['database']
         )
+
         #print ("connection made")
 
     def create(self, book):
