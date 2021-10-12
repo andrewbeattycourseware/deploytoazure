@@ -1,80 +1,82 @@
-from flask import Flask, jsonify, request, abort
-from bookDAO import bookDAO
-from flask_cors import CORS
+from flask import Flask, url_for, request, redirect, abort, jsonify
+from BookDao import bookDao
+
+app = Flask(__name__, static_url_path='', static_folder='staticpages')
 
 
-app = Flask(__name__, static_url_path='', static_folder='.')
-CORS(app)
-#app = Flask(__name__)
+@app.route('/')
+def index():
+    return "hello"
+#get all
 
-#@app.route('/')
-#def index():
-#    return "Hello, World!"
 
-#curl "http://127.0.0.1:5000/books"
 @app.route('/books')
 def getAll():
-    #print("in getall")
-    results = bookDAO.getAll()
-    return jsonify(results)
+    return jsonify(bookDao.getAll())
+# find By id
 
-#curl "http://127.0.0.1:5000/books/2"
-@app.route('/books/<int:id>')
-def findById(id):
-    foundBook = bookDAO.findByID(id)
 
-    return jsonify(foundBook)
+@app.route('/books/<int:ISBN>')
+def findById(ISBN):
+    return jsonify(bookDao.findById(ISBN))
 
-#curl  -i -H "Content-Type:application/json" -X POST -d "{\"Title\":\"hello\",\"Author\":\"someone\",\"Price\":123}" http://127.0.0.1:5000/books
+
+@app.route('/books/searchtitle/<string:title>')
+def searchbytitle(title):
+    print(title)
+    return jsonify(bookDao.searchbytitle(title))
+
+# create
+# curl -X POST -i -H "Content-Type:application/json" -d "{\"ISBN\":\"1234\",\"title\":\"test\", \"author\":\"some guy\", \"price\":123}" http://127.0.0.1:5000/books
+
+
 @app.route('/books', methods=['POST'])
 def create():
-    
+
     if not request.json:
         abort(400)
-    # other checking 
+
     book = {
-        "Title": request.json['Title'],
-        "Author": request.json['Author'],
-        "Price": request.json['Price'],
+        "ISBN": request.json["ISBN"],
+        "title": request.json["title"],
+        "author": request.json["author"],
+        "price": request.json["price"]
     }
-    values =(book['Title'],book['Author'],book['Price'])
-    newId = bookDAO.create(values)
-    book['id'] = newId
-    return jsonify(book)
+    return jsonify(bookDao.create(book))
 
-#curl  -i -H "Content-Type:application/json" -X PUT -d "{\"Title\":\"hello\",\"Author\":\"someone\",\"Price\":123}" http://127.0.0.1:5000/books/1
-@app.route('/books/<int:id>', methods=['PUT'])
-def update(id):
-    foundBook = bookDAO.findByID(id)
-    if not foundBook:
-        abort(404)
-    
-    if not request.json:
-        abort(400)
-    reqJson = request.json
-    if 'Price' in reqJson and type(reqJson['Price']) is not int:
-        abort(400)
+    return "served by Create "
 
-    if 'Title' in reqJson:
-        foundBook['Title'] = reqJson['Title']
-    if 'Author' in reqJson:
-        foundBook['Author'] = reqJson['Author']
-    if 'Price' in reqJson:
-        foundBook['Price'] = reqJson['Price']
-    values = (foundBook['Title'],foundBook['Author'],foundBook['Price'],foundBook['id'])
-    bookDAO.update(values)
-    return jsonify(foundBook)
-        
-
-    
-
-@app.route('/books/<int:id>' , methods=['DELETE'])
-def delete(id):
-    bookDAO.delete(id)
-    return jsonify({"done":True})
+#update
+# curl -X PUT -i -H "Content-Type:application/json" -d "{\"Title\":\"new Title\", \"Price\":999}" -H "content-type:application/json" http://127.0.0.1:5000/books/1
 
 
+@app.route('/books/<int:ISBN>', methods=['PUT'])
+def update(ISBN):
+    foundBook = bookDao.findById(ISBN)
+    print(foundBook)
+    if foundBook == {}:
+        return jsonify({}), 404
+    currentBook = foundBook
+    if 'title' in request.json:
+        currentBook['title'] = request.json['title']
+    if 'author' in request.json:
+        currentBook['author'] = request.json['author']
+    if 'price' in request.json:
+        currentBook['price'] = request.json['price']
+    bookDao.update(currentBook)
+
+    return jsonify(currentBook)
+
+#delete
+# curl -X DELETE http://127.0.0.1:5000/books/1
 
 
-if __name__ == '__main__' :
-    app.run(debug= True)
+@app.route('/books/<int:ISBN>', methods=['DELETE'])
+def delete(ISBN):
+    bookDao.delete(ISBN)
+
+    return jsonify({"done": True})
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
