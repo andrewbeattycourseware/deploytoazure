@@ -11,6 +11,9 @@ class BookDao:
             password=   cfg.mysql['password'],
             database=   cfg.mysql['database']
         )
+        def __init__(self): 
+            self.connectToDB()
+    
 
         #print ("connection made")
 
