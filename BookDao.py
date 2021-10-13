@@ -19,7 +19,7 @@ class BookDao:
 
     def create(self, book):
         cursor = self.db.cursor()
-        sql = "insert into book (ISBN, title, author, price) values (%s,%s,%s,%s)"
+        sql = "insert into books (ISBN, title, author, price) values (%s,%s,%s,%s)"
         values = [
             book['ISBN'],
             book['title'],
@@ -32,7 +32,7 @@ class BookDao:
 
     def getAll(self):
         cursor = self.db.cursor()
-        sql = 'select * from book'
+        sql = 'select * from books'
         cursor.execute(sql)
         results = cursor.fetchall()
         returnArray = []
@@ -47,7 +47,7 @@ class BookDao:
     def searchbytitle(self, title):
         cursor = self.db.cursor()
         # bad bad code DO NOT DO THIS
-        sql = "select * from book where title like '%"+title +"%'"
+        sql = "select * from books where title like '%"+title +"%'"
         print(sql)
         cursor.execute(sql)
         results = cursor.fetchall()
@@ -63,7 +63,7 @@ class BookDao:
     def findById(self, ISBN):
         cursor = self.db.cursor()
         # this is will allow sql injection
-        sql = "select * from book where ISBN = %s"
+        sql = "select * from books where ISBN = %s"
         values = [ ISBN ]
         cursor.execute(sql, values)
         result = cursor.fetchone()
@@ -72,7 +72,7 @@ class BookDao:
 
     def update(self, book):
        cursor = self.db.cursor()
-       sql = "update book set title = %s, author = %s, price = %s where ISBN = %s"
+       sql = "update books set title = %s, author = %s, price = %s where ISBN = %s"
        values = [
            book['title'],
            book['author'],
@@ -86,7 +86,7 @@ class BookDao:
 
     def delete(self, ISBN):
        cursor = self.db.cursor()
-       sql = 'delete from book where ISBN = %s'
+       sql = 'delete from books where ISBN = %s'
        values = [ISBN]
        cursor.execute(sql, values)
        
