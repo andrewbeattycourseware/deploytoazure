@@ -1,13 +1,17 @@
-from flask import Flask, url_for, request, redirect, abort, jsonify
+from flask import Flask,session, url_for, request, redirect, abort, jsonify, render_template
 from BookDao import bookDao
 
 app = Flask(__name__, static_url_path='', static_folder='staticpages')
 
 
 @app.route('/')
-def index():
-    return "hello"
-#get all
+def home():
+    if not 'username' in session:
+        return redirect(url_for('login'))
+
+    return 'welcome ' + session['username'] +\
+        '<br><a href="'+url_for('logout')+'">logout</a>'
+
 
 
 @app.route('/books')
@@ -76,6 +80,78 @@ def delete(ISBN):
     bookDao.delete(ISBN)
 
     return jsonify({"done": True})
+
+
+@app.route('/books/display/<int:ISBN>')
+def display(ISBN):
+    book = bookDao.findById(ISBN)
+    print(book)
+    return render_template('displayxss.html', title=book['title'])
+
+
+@app.route('/books/baddisplay/<int:ISBN>')
+def baddisplay(ISBN):
+    book = bookDao.findById(ISBN)
+    print(book)
+    return '<html><body> you like '+ book['title'] + '</body></html>'
+
+
+@app.route('/books/badhello')
+def badhello():
+    name = request.args.get('username')
+    return '<html><body> hello ' + name + '</body></html>'
+
+
+#### login urls
+app.secret_key = 'someSecrtetasdrgsadfgsdfg3ko'
+
+
+@app.route('/login')
+def login():
+    return '<h1> login</h1> ' +\
+        '<button>' +\
+        '<a href="'+url_for('proccess_login')+'">' +\
+        'login' +\
+        '</a>' +\
+        '</button>'
+
+@app.route('/processlogin')
+def proccess_login():
+    #check credentials
+    #if bad redirect to login page again
+
+    #else
+    print("logging in")
+    session['username'] = "I dunno2"
+    return redirect(url_for('home'))
+
+
+@app.route('/logout')
+def logout():
+    print(session['username'])
+    session.pop('username', None)
+    if 'username' in session:
+        print('o no')
+        print(session['username'])
+    else:
+        print("nowt here")
+    #session['username'] ='3434'
+    #print(session['username'])
+
+    #return 'done'
+    return redirect(url_for('home'))
+
+
+@app.route('/secure')
+def getData():
+    if not 'username' in session:
+        abort(401)
+
+    print(session['username'])
+    return '{"data":"Top Secret stuff"}'
+
+
+
 
 
 if __name__ == "__main__":
