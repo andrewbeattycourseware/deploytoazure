@@ -1,0 +1,12 @@
+<html>
+
+<body>
+    <a href=http://127.0.0.1:5000/books/badhello?username=%3Cscript%3Econsole.log(%22BAD%22)%3C%2fscript%3E> say hello </a>
+    <a href=http://127.0.0.1:5000/books/badhello?username=%3Cscript%3Econsole.log(document.cookie)%3C%2fscript%3E> say hello </a>
+    <script>
+        console.log("cookie3?")
+        let decodedCookie = decodeURIComponent(document.cookie);
+        console.log(decodedCookie)
+        console.log("pure: "+document.cookie)
+    </script>
+</body ></html >
