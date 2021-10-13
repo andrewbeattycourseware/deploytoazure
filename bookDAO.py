@@ -2,7 +2,7 @@ import mysql.connector
 from mysql.connector import cursor
 
 import dbconfig as cfg
-class BookDAO:
+class BookDao:
     db=""
     def connectToDB(self):
         self.db = mysql.connector.connect(
@@ -60,7 +60,7 @@ class BookDAO:
     def findById(self, ISBN):
         cursor = self.db.cursor()
         # this is will allow sql injection
-        sql = "select * from books where ISBN = '"+ISBN+"'"
+        sql = "select * from books where ISBN = %s"
         values = [ ISBN ]
         cursor.execute(sql, values)
         result = cursor.fetchone()

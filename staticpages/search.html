@@ -63,9 +63,10 @@
 
         function populateTable(title) {
             //ajax getAll
+            host = window.location.origin
             document.getElementById('bookTable').innerHTML = '';
             $.ajax({
-                url: 'http://127.0.0.1:5000/books/searchtitle/'+title,
+                url: host + '/books/searchtitle/'+title,
                 method: 'GET',
                 datatype: 'JSON',
                 success: function (results) {
